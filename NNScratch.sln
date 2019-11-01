@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NNScratch", "NNScratch\NNScratch.vcxproj", "{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Debug|x64.ActiveCfg = Debug|x64
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Debug|x64.Build.0 = Debug|x64
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Debug|x86.ActiveCfg = Debug|Win32
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Debug|x86.Build.0 = Debug|Win32
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Release|x64.ActiveCfg = Release|x64
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Release|x64.Build.0 = Release|x64
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Release|x86.ActiveCfg = Release|Win32
+		{AC5B59E3-D97D-4F93-BAA3-021B06C5DFCD}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F90BFF43-89CF-4543-9011-E2BEE48FAA61}
+	EndGlobalSection
+EndGlobal
