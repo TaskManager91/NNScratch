@@ -1,15 +1,12 @@
 #include "Neuron.h"
 
-double Neuron::lRate = 0.1;    // learning Rate
-double Neuron::alpha = 0.2;   //alpha
+double Neuron::lambda = 0.0001;    // learning Rate
+double Neuron::alpha = 0.7;   // alpha
 
-Neuron::Neuron(int outputs, int myIndex)
+Neuron::Neuron(int weightCount, int myIndex)
 {
-	for (int a = 0; a < outputs; a++)
-	{
+	for (int i = 0; i < weightCount; i++)
 		weight.push_back(rand() / double(RAND_MAX));
-		deltaWeight.push_back(0.5);
-	}
 		
 	index = myIndex;
 }
@@ -21,17 +18,17 @@ void Neuron::feedForward(vector<Neuron> &lastLayer)
 	for (int neuron = 0; neuron < lastLayer.size(); neuron++)
 		z += lastLayer[neuron].a * lastLayer[neuron].weight[index];
 
-	//sigmoid func
+	// sigmoid func
 	a = (1 / (1 + exp(-z)));
 }
 
 void Neuron::outputError(double y)
 {
 	// (y - a) * sigmoid func derivative
-	error_term = (y - a) * (a * (1 - a));
+	error_term = - (y - a) * (a * (1 - a));
 }
 
-void Neuron::hiddenError(vector<Neuron>& nextLayer)
+void Neuron::hiddenError(vector<Neuron> &nextLayer)
 {
 	double sum = 0.0;
 
@@ -39,20 +36,17 @@ void Neuron::hiddenError(vector<Neuron>& nextLayer)
 		sum += weight[neuron] * nextLayer[neuron].error_term;
 
 	// SUM( w * error_term[n+1] ) * sigmoid func derivative
-	error_term = sum * (a * (1 - a));
+	error_term = sum * (a*(1-a));
 }
-
-
 
 void Neuron::updateWeight(vector<Neuron> &prevLayer)
 {
-	for (int neuron = 0; neuron < prevLayer.size(); neuron++) {
-		Neuron &bufferNeuron = prevLayer[neuron];
-		double oldDeltaWeight = bufferNeuron.deltaWeight[index];
+	for (int neuronCount = 0; neuronCount < prevLayer.size(); neuronCount++) 
+	{
+		Neuron &neuron = prevLayer[neuronCount]; 
 
-		double newDeltaWeight =	lRate * bufferNeuron.a * error_term	+ alpha * oldDeltaWeight;
-
-		bufferNeuron.deltaWeight[index] = newDeltaWeight;
-		bufferNeuron.weight[index] += newDeltaWeight;
+		//new Weight = oldWeight - alpha [ (error_term(l+1) * activation) + (lambda * oldweight) ]
+		neuron.weight[index] = neuron.weight[index] - alpha * ((error_term * neuron.a) + (lambda * neuron.weight[index]));
 	}
 }
+

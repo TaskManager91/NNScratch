@@ -18,11 +18,11 @@ NeuralNet::NeuralNet(vector<int> structure)
 		vector<Neuron> newLayer;
 		network.push_back(newLayer);
 
-		int outputs = layer == layerCount - 1 ? 0 : structure[layer + 1];
+		int weightCount = layer == layerCount - 1 ? 0 : structure[layer + 1];
 
 		for (int neuron = 0; neuron <= structure[layer]; neuron++) 
 		{
-			network[layer].push_back(Neuron(outputs, neuron));
+			network[layer].push_back(Neuron(weightCount, neuron));
 			
 			if (neuron == structure[layer])
 				network[layer][neuron].a = 1.0;
@@ -32,13 +32,11 @@ NeuralNet::NeuralNet(vector<int> structure)
 
 void NeuralNet::feedForward(vector<double> inputLayer)
 {
-
 	// Set input neurons
 	for (int neuron = 0; neuron < inputLayer.size(); neuron++)
 		network[0][neuron].a = inputLayer[neuron];
 
-
-	// forward propagate
+	// feed forward 
 	for (int layer = 1; layer < network.size(); layer++) 
 	{
 		vector<Neuron> lastLayer = network[layer - 1];

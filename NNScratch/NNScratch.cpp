@@ -30,7 +30,7 @@ int main()
 
 	cout << endl;
 
-	unsigned epochs = 40000;
+	unsigned epochs = 20000;
 	vector<double> result, training_input, training_output;
 
 	for (unsigned i = 0; i <= epochs; i++)

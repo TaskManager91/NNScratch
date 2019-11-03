@@ -13,12 +13,11 @@ public:
 	void feedForward(vector<Neuron> &lastLayer);
 	void outputError(double targetVal);
 	void hiddenError(vector<Neuron> &nextLayer);
-	void updateWeight(vector<Neuron> &prevLayer);
+	void updateWeight(vector<Neuron> &prevLayer);;
 private:
-	static double lRate; // learning Rate
+	static double lambda; // learning Rate
 	static double alpha; // alpha
-	vector<double> weight;
-	vector<double> deltaWeight;
-	int index;
+	vector<double> weight;	// weights this neuron -> next layer 
+	int index;	// own position in layer
 	double error_term;
 };
