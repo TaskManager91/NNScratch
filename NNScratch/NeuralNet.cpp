@@ -1,5 +1,15 @@
 #include "NeuralNet.h"
 
+double NeuralNet::getMSE()
+{
+	double mse = 0.0;
+	for (int i = 0; i < network.back().size() - 1; i++)
+		mse += network.back()[i].mse;
+
+	return mse;
+}
+
+
 vector<double> NeuralNet::getOutput()
 {
 	vector<double> outputLayer;
@@ -9,7 +19,7 @@ vector<double> NeuralNet::getOutput()
 	return outputLayer;
 }
 
-NeuralNet::NeuralNet(vector<int> structure)
+NeuralNet::NeuralNet(vector<int> structure, double aBuffer, double lBuffer)
 {
 	int layerCount = structure.size();
 
@@ -28,6 +38,9 @@ NeuralNet::NeuralNet(vector<int> structure)
 				network[layer][neuron].a = 1.0;
 		}
 	}
+
+	alpha = aBuffer;
+	lambda = lBuffer;
 }
 
 void NeuralNet::feedForward(vector<double> inputLayer)
@@ -69,7 +82,15 @@ void NeuralNet::backPropagation(vector<double> &target)
 		vector<Neuron> &lastLayer = network[layerCount - 1];
 
 		for (int neuron = 0; neuron < layer.size() - 1; neuron++) {
-			layer[neuron].updateWeight(lastLayer);
+			Neuron &bufferNeuron = layer[neuron];
+
+			for (int neuronLast = 0; neuronLast < lastLayer.size(); neuronLast++)
+			{
+				Neuron &neuron = lastLayer[neuronLast];
+
+				//new Weight = oldWeight - alpha [ (error_term(l+1) * activation) + (lambda * oldweight) ]
+				neuron.weight[bufferNeuron.index] = neuron.weight[bufferNeuron.index] - alpha * ((bufferNeuron.error_term * neuron.a) + (lambda * neuron.weight[bufferNeuron.index]));
+			}
 		}
 	}
 }

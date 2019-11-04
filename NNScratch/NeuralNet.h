@@ -9,10 +9,13 @@ using namespace std;
 class NeuralNet
 {
 public:
-	NeuralNet(vector<int> structure);
+	double lambda;	// learning Rate
+	double alpha;	// 
+	vector<vector<Neuron>> network; // network[layer][neuron]
+	NeuralNet(vector<int> structure, double alpha, double lambda);
 	void feedForward(vector<double> inputVals);
 	void backPropagation(vector<double>& targetVals);
 	vector<double> getOutput();
-	vector<vector<Neuron>> network; // network[layer][neuron]
+	double getMSE();
 };
 

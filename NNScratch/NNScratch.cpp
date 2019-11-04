@@ -2,12 +2,15 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <locale>
 #include "NeuralNet.h"
 
 int interpolate(double x);
 
 int main()
 {
+	std::locale::global(std::locale("de-DE"));
 	std::cout << "NNScratch! by Christoph B. \n";
 
 	vector<int> structure = { 8,3,8 };
@@ -23,54 +26,93 @@ int main()
 
 	int inputCounter = 0;
 
-	NeuralNet sarah(structure);
+	double lambda = 0.00000001;    // learning Rate
+	double alpha = 0.95;	// alpha
+
+	NeuralNet sarah(structure, alpha, lambda);
 
 	for (int i = 0; i < sarah.network.size(); i++)
 		cout << "Layer : " << i << " Neurons: " << sarah.network[i].size() << endl;
 
 	cout << endl;
 
-	unsigned epochs = 20000;
+	unsigned epochs = 2000;
 	vector<double> result, training_input, training_output;
+	double mse = 0.0;
+	double mseBuffer = 0.0;
+	bool trained = false;
 
-	for (unsigned i = 0; i <= epochs; i++)
+	ofstream myfile;
+	myfile.open("data.csv");
+	myfile << "Epoch;MSE;ERROR;Alpha: " << alpha << ";Lambda: "<< lambda << "\n";
+
+	for (int i = 0; i <= epochs; i++)
 	{
-		training_input = data[inputCounter];
-		sarah.feedForward(training_input);
+		for(int j = 0; j <= data.size(); j++)
+		{
+			training_input = data[inputCounter];
+			sarah.feedForward(training_input);
 
-		result = sarah.getOutput();
+			result = sarah.getOutput();
 
-		training_output = data[inputCounter];
+			training_output = data[inputCounter];
 
-		sarah.backPropagation(training_output);
+			sarah.backPropagation(training_output);
+		}
+
+		for (int i = 0; i < result.size(); i++)
+		{
+			if (interpolate(result[i]) != training_output[i])
+				trained = true;
+		}
+
+		mseBuffer += sarah.getMSE();
 
 		inputCounter++;
 
-		if (inputCounter == data.size())
-			inputCounter = 0;
+		// write to file and ignore the "initial" rounds
+		if(i >= 32)
+			myfile << i << ";" << mse << ";" << trained << "\n";
 
-		if (i % 1000 == 0 || i >= (epochs - 20))
+		if (inputCounter == data.size())
+		{
+			mse = mseBuffer / data.size();
+			trained = false;
+			mseBuffer = 0;
+			inputCounter = 0;
+		}
+			
+		if (i % 1000 == 0 || i >= (epochs - 8))
 		{
 			cout << "Iteration: " << i << endl;
 
+			cout << "RAW: ";
+			for (int i = 0; i < result.size(); i++)
+				cout << result[i] << ' ';
+			cout << '\n';
+
 			cout << " Input: ";
-			for (unsigned i = 0; i < training_input.size(); i++)
+			for (int i = 0; i < training_input.size(); i++)
 				cout << training_input[i] << ' ';
 			cout << '\n';
 
 			cout << "Result: ";
-			for (unsigned i = 0; i < result.size(); i++)
+			for (int i = 0; i < result.size(); i++)
 				cout << interpolate(result[i]) << ' ';
 			cout << '\n';
 
 			cout << "Output: ";
-			for (unsigned i = 0; i < training_output.size(); i++)
+			for (int i = 0; i < training_output.size(); i++)
 				cout << training_output[i] << ' ';
 			cout << '\n';
+
+			cout << "MSE: "<< mse << '\n';
 
 			cout << endl;
 		}
 	}
+
+	myfile.close();
 }
 
 int interpolate(double x)

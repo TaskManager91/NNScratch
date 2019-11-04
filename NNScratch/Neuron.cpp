@@ -1,7 +1,6 @@
 #include "Neuron.h"
 
-double Neuron::lambda = 0.0001;    // learning Rate
-double Neuron::alpha = 0.7;   // alpha
+
 
 Neuron::Neuron(int weightCount, int myIndex)
 {
@@ -26,6 +25,7 @@ void Neuron::outputError(double y)
 {
 	// (y - a) * sigmoid func derivative
 	error_term = - (y - a) * (a * (1 - a));
+	mse = (a - y) * (a - y);
 }
 
 void Neuron::hiddenError(vector<Neuron> &nextLayer)
@@ -38,15 +38,3 @@ void Neuron::hiddenError(vector<Neuron> &nextLayer)
 	// SUM( w * error_term[n+1] ) * sigmoid func derivative
 	error_term = sum * (a*(1-a));
 }
-
-void Neuron::updateWeight(vector<Neuron> &prevLayer)
-{
-	for (int neuronCount = 0; neuronCount < prevLayer.size(); neuronCount++) 
-	{
-		Neuron &neuron = prevLayer[neuronCount]; 
-
-		//new Weight = oldWeight - alpha [ (error_term(l+1) * activation) + (lambda * oldweight) ]
-		neuron.weight[index] = neuron.weight[index] - alpha * ((error_term * neuron.a) + (lambda * neuron.weight[index]));
-	}
-}
-
