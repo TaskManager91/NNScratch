@@ -8,35 +8,35 @@
 
 int interpolate(double x);
 
+//Config
+double lambda = 0.0001;		// learning Rate
+double alpha = 0.95;		// alpha
+unsigned epochs = 1000;		// number of iterations
+
+vector<int> structure = { 8,3,8 };
+
+vector<vector<double>> data{ {1,0,0,0,0,0,0,0},
+							{0,1,0,0,0,0,0,0},
+							{0,0,1,0,0,0,0,0},
+							{0,0,0,1,0,0,0,0},
+							{0,0,0,0,1,0,0,0},
+							{0,0,0,0,0,1,0,0},
+							{0,0,0,0,0,0,1,0},
+							{0,0,0,0,0,0,0,1} };
+
 int main()
 {
 	std::locale::global(std::locale("de-DE"));
 	std::cout << "NNScratch! by Christoph B. \n";
 
-	vector<int> structure = { 8,3,8 };
-
-	vector<vector<double>> data{	{1,0,0,0,0,0,0,0},
-									{0,1,0,0,0,0,0,0},
-									{0,0,1,0,0,0,0,0},
-									{0,0,0,1,0,0,0,0},
-									{0,0,0,0,1,0,0,0},
-									{0,0,0,0,0,1,0,0},
-									{0,0,0,0,0,0,1,0},
-									{0,0,0,0,0,0,0,1} };
-
-	int inputCounter = 0;
-
-	double lambda = 0.0001; // learning Rate
-	double alpha = 0.95;	// alpha
-
+	// Create NeuralNet object
 	NeuralNet sarah(structure, alpha, lambda);
 
+	//Print out number of neurons for each layer
 	for (int i = 0; i < sarah.network.size(); i++)
 		cout << "Layer : " << i << " Neurons: " << sarah.network[i].size() << endl;
-
 	cout << endl;
 
-	unsigned epochs = 2000;
 	vector<double> result, training_input, training_output;
 	double mse = 0.0;
 	double mseBuffer = 0.0;
@@ -46,6 +46,7 @@ int main()
 	myfile.open("data.csv");
 	myfile << "Epoch;MSE;ERROR;Alpha: " << alpha << ";Lambda: "<< lambda << "\n";
 
+	int inputCounter = 0;
 	for (int i = 0; i <= epochs; i++)
 	{
 		for(int j = 0; j <= 10; j++)

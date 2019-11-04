@@ -8,7 +8,6 @@ using namespace std;
 class Neuron
 {
 public:
-	Neuron(int outputs, int index);
 	double a;
 	int index;	// own position in layer
 	double error_term;
@@ -17,4 +16,5 @@ public:
 	void feedForward(vector<Neuron> &lastLayer);
 	void outputError(double targetVal);
 	void hiddenError(vector<Neuron> &nextLayer);
+	Neuron(int outputs, int index);
 };

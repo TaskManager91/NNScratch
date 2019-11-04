@@ -1,5 +1,32 @@
 #include "NeuralNet.h"
 
+
+NeuralNet::NeuralNet(vector<int> structure, double aBuffer, double lBuffer)
+{
+	int layerCount = structure.size();
+
+	for (int layer = 0; layer < layerCount; layer++)
+	{
+		vector<Neuron> newLayer;
+		network.push_back(newLayer);
+
+		// If last layer output =0, else number of elements from next layer
+		int outputs = layer == layerCount - 1 ? 0 : structure[layer + 1];
+
+		for (int neuron = 0; neuron <= structure[layer]; neuron++)
+		{
+			network[layer].push_back(Neuron(outputs, neuron));
+
+			//Set Bias
+			if ((neuron == structure[layer]) && (layer != layerCount))
+				network[layer][neuron].a = 1.0;
+		}
+	}
+
+	alpha = aBuffer;
+	lambda = lBuffer;
+}
+
 double NeuralNet::getMSE()
 {
 	double mse = 0.0;
@@ -17,30 +44,6 @@ vector<double> NeuralNet::getOutput()
 		outputLayer.push_back(network.back()[i].a);
 
 	return outputLayer;
-}
-
-NeuralNet::NeuralNet(vector<int> structure, double aBuffer, double lBuffer)
-{
-	int layerCount = structure.size();
-
-	for (int layer = 0; layer < layerCount; layer++) 
-	{
-		vector<Neuron> newLayer;
-		network.push_back(newLayer);
-
-		int weightCount = layer == layerCount - 1 ? 0 : structure[layer + 1];
-
-		for (int neuron = 0; neuron <= structure[layer]; neuron++) 
-		{
-			network[layer].push_back(Neuron(weightCount, neuron));
-			
-			if (neuron == structure[layer])
-				network[layer][neuron].a = 1.0;
-		}
-	}
-
-	alpha = aBuffer;
-	lambda = lBuffer;
 }
 
 void NeuralNet::feedForward(vector<double> inputLayer)
