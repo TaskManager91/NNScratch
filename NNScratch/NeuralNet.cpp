@@ -84,13 +84,15 @@ void NeuralNet::backPropagation(vector<double> &target)
 		for (int neuron = 0; neuron < layer.size() - 1; neuron++) {
 			Neuron &bufferNeuron = layer[neuron];
 
-			for (int neuronLast = 0; neuronLast < lastLayer.size(); neuronLast++)
+			for (int neuronLast = 0; neuronLast < lastLayer.size()-1; neuronLast++)
 			{
 				Neuron &neuron = lastLayer[neuronLast];
 
 				//new Weight = oldWeight - alpha [ (error_term(l+1) * activation) + (lambda * oldweight) ]
 				neuron.weight[bufferNeuron.index] = neuron.weight[bufferNeuron.index] - alpha * ((bufferNeuron.error_term * neuron.a) + (lambda * neuron.weight[bufferNeuron.index]));
 			}
+			Neuron &biasNeuron = lastLayer[lastLayer.size()-1];
+			biasNeuron.weight[bufferNeuron.index] = biasNeuron.weight[bufferNeuron.index] - alpha * (bufferNeuron.error_term * biasNeuron.a);
 		}
 	}
 }

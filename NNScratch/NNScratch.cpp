@@ -26,7 +26,7 @@ int main()
 
 	int inputCounter = 0;
 
-	double lambda = 0.00000001;    // learning Rate
+	double lambda = 0.0001; // learning Rate
 	double alpha = 0.95;	// alpha
 
 	NeuralNet sarah(structure, alpha, lambda);
@@ -48,7 +48,7 @@ int main()
 
 	for (int i = 0; i <= epochs; i++)
 	{
-		for(int j = 0; j <= data.size(); j++)
+		for(int j = 0; j <= 10; j++)
 		{
 			training_input = data[inputCounter];
 			sarah.feedForward(training_input);
@@ -86,7 +86,12 @@ int main()
 		{
 			cout << "Iteration: " << i << endl;
 
-			cout << "RAW: ";
+			cout << "Hidden Layer activation: ";
+			for (int i = 0; i < sarah.network[1].size(); i++)
+				cout << sarah.network[1][i].a << ' ';
+			cout << '\n';
+
+			cout << "RAW Output: ";
 			for (int i = 0; i < result.size(); i++)
 				cout << result[i] << ' ';
 			cout << '\n';

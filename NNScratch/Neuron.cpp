@@ -1,7 +1,5 @@
 #include "Neuron.h"
 
-
-
 Neuron::Neuron(int weightCount, int myIndex)
 {
 	for (int i = 0; i < weightCount; i++)
