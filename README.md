@@ -2,6 +2,8 @@
 
 A from scratch neural network that uses the sigmoid function.
 
+# Structure
+
 NNScratch.cpp contains the main function.
 
 The main logic of the network can be found in NeuralNet.cpp.
