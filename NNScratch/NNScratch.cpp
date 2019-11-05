@@ -21,7 +21,7 @@ int interpolate(double x);
 void output(int epoch, NeuralNet network);
 void outputFinal(NeuralNet network);
 
-//Config
+//	--- CONFIG --
 double lambda = 0.0001;		// learning Rate
 double alpha = 0.95;		// alpha
 unsigned epochs = 20000;	// number of iterations
@@ -36,7 +36,7 @@ int main()
 	locale::global(locale("de-DE"));
 	cout << "NNScratch! by Christoph B. & Oliver B. \n";
 
-	//load config
+	//	Load config
 	double inputlambda, inputalpha;
 	unsigned inputepochs;
 	char inputinterpolated;
@@ -53,40 +53,45 @@ int main()
 	// Create NeuralNet object
 	NeuralNet sarah(structure, alpha, lambda);
 
-	//Print out number of neurons for each layer
+	//	Print out number of neurons for each layer
 	for (int i = 0; i < sarah.network.size(); i++)
 		cout << "Layer : " << i << " Neurons: " << sarah.network[i].size() << endl;
 	cout << endl;
 
-	//
+	// Init necessary variables for the net
 	vector<double> result, training_input, training_output;
 	double mse = 0.0;
 	double mseBuffer = 0.0;
 	bool trained = false;
 
+	// logs everything into a CSV so it can be visualized later with Excel
 	ofstream myfile;
 	myfile.open("data.csv");
 	myfile << "Epoch;MSE;ERROR;Alpha: " << alpha << ";Lambda: "<< lambda << "\n";
 
+	// training set
 	vector<vector<double>> data = { {1,0,0,0,0,0,0,0},
-							{0,1,0,0,0,0,0,0},
-							{0,0,1,0,0,0,0,0},
-							{0,0,0,1,0,0,0,0},
-							{0,0,0,0,1,0,0,0},
-							{0,0,0,0,0,1,0,0},
-							{0,0,0,0,0,0,1,0},
-							{0,0,0,0,0,0,0,1} };
-
+									{0,1,0,0,0,0,0,0},
+									{0,0,1,0,0,0,0,0},
+									{0,0,0,1,0,0,0,0},
+									{0,0,0,0,1,0,0,0},
+									{0,0,0,0,0,1,0,0},
+									{0,0,0,0,0,0,1,0},
+									{0,0,0,0,0,0,0,1} };
 	int inputCounter = 0;
+
 	for (int i = 0; i <= epochs; i++)
 	{
 		training_input = data[inputCounter];
+
+		//	feedforward
 		sarah.feedForward(training_input);
 
 		result = sarah.getOutput();
 
 		training_output = data[inputCounter];
 
+		// backpropagation
 		sarah.backPropagation(training_output);
 
 		for (int i = 0; i < result.size(); i++)
@@ -110,6 +115,7 @@ int main()
 		if (i % 1000 == 0)
 			output(i, sarah);
 
+		// Log to CSV
 		if (i % 100 == 0 && i != 0)
 			myfile << i << ";" << mse << ";" << trained << "\n";
 	}
