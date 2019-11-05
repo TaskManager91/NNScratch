@@ -180,7 +180,7 @@ void output(int epoch, NeuralNet network) {
 		cout << " Hidden Layer: ";
 		for (int i = 0; i < network.network[1].size()-1; i++) {
 			if(interpolated)
-				cout << network.network[1][i].a << ' ';
+				cout << interpolate(network.network[1][i].a) << ' ';
 			else
 				cout << fixed << setprecision(3) << network.network[1][i].a << ' ';
 		}
