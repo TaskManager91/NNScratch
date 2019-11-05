@@ -16,7 +16,13 @@ void Neuron::feedForward(vector<Neuron> &lastLayer)
 		z += lastLayer[neuron].a * lastLayer[neuron].weight[index];
 
 	// sigmoid func
-	a = (1 / (1 + exp(-z)));
+	a = sigmoid(z);
+	//a = activation(z);
+}
+
+double Neuron::sigmoid(double z) {
+	double a = (1 / (1 + exp(-z)));
+	return a;
 }
 
 void Neuron::outputError(double y)

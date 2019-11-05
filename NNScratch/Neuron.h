@@ -13,6 +13,8 @@ public:
 	double error_term;
 	double mse;
 	vector<double> weight;	// weights this neuron -> next layer 
+	double sigmoid(double z);
+	int activation(double z);
 	void feedForward(vector<Neuron> &lastLayer);
 	void outputError(double targetVal);
 	void hiddenError(vector<Neuron> &nextLayer);
