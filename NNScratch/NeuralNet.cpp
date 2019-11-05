@@ -18,7 +18,7 @@ NeuralNet::NeuralNet(vector<int> structure, double aBuffer, double lBuffer)
 		vector<Neuron> newLayer;
 		network.push_back(newLayer);
 
-		// If last layer output =0, else number of elements from next layer
+		// If last layer outputs = 0, else number of elements from next layer
 		int outputs = layer == layerCount - 1 ? 0 : structure[layer + 1];
 
 		for (int neuron = 0; neuron <= structure[layer]; neuron++)
@@ -65,6 +65,7 @@ void NeuralNet::feedForward(vector<double> inputLayer)
 	{
 		vector<Neuron> lastLayer = network[layer - 1];
 
+		// calls feedforward() from Neuron.cpp 
 		for (int neuron = 0; neuron < network[layer].size() - 1; neuron++) 
 			network[layer][neuron].feedForward(lastLayer);
 	}
@@ -74,11 +75,11 @@ void NeuralNet::backPropagation(vector<double> &target)
 {
 	vector<Neuron> &outputLayer = network.back();
 
-	// output layer error terms
+	// output layer error terms calls outputError() from Neuron.cpp 
 	for (int neuron = 0; neuron < outputLayer.size() - 1; neuron++) 
 		outputLayer[neuron].outputError(target[neuron]);
 
-	// hidden layer error terms
+	// hidden layer error terms calls hiddenError() from Neuron.cpp 
 	for (int layerCount = network.size() - 2; layerCount > 0; layerCount--) {
 		vector<Neuron> &layer = network[layerCount];
 		vector<Neuron> &nextLayer = network[layerCount + 1];
@@ -87,7 +88,7 @@ void NeuralNet::backPropagation(vector<double> &target)
 			layer[neuron].hiddenError(nextLayer);
 	}
 
-	// update connection weights
+	// update connection weights 
 	for (int layerCount = network.size() - 1; layerCount > 0; layerCount--) {
 		vector<Neuron> &layer = network[layerCount];
 		vector<Neuron> &lastLayer = network[layerCount - 1];

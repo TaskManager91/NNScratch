@@ -24,7 +24,6 @@ void Neuron::feedForward(vector<Neuron> &lastLayer)
 
 	// sigmoid func
 	a = sigmoid(z);
-	//a = activation(z);
 }
 
 double Neuron::sigmoid(double z) {

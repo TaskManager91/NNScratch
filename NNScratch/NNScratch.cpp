@@ -11,19 +11,21 @@
 //	#																	#
 //	#####################################################################
 
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <locale>
 #include <iomanip> 
 #include "NeuralNet.h"
 
+using namespace std;
+
 int interpolate(double x);
-void output(int epoch, NeuralNet network);
-void outputFinal(NeuralNet network);
+void consoleLog(int epoch, NeuralNet network);
 
 //	--- CONFIG --
-double lambda = 0.0001;		// learning Rate
-double alpha = 0.95;		// alpha
+double lambda = 0.000001;	// learning Rate
+double alpha = 4.5;			// alpha
 unsigned epochs = 20000;	// number of iterations
 bool interpolated = false;
 
@@ -33,7 +35,9 @@ vector<int> structure = { 8,3,8 };
 //	------------------------------------ MAIN ------------------------------------
 int main()
 {
+	// Sets the double values from 0.0 to 0,0 for cout, so that Excel can read the data later.
 	locale::global(locale("de-DE"));
+
 	cout << "NNScratch! by Christoph B. & Oliver B. \n";
 
 	//	Load config
@@ -48,26 +52,23 @@ int main()
 	else
 		interpolated = true;
 
-	cout << "\n";
-
 	// Create NeuralNet object
-	NeuralNet sarah(structure, alpha, lambda);
+	NeuralNet sarah(structure, alpha, lambda);		// sarah, the AI from the eureka series.
 
 	//	Print out number of neurons for each layer
 	for (int i = 0; i < sarah.network.size(); i++)
 		cout << "Layer : " << i << " Neurons: " << sarah.network[i].size() << endl;
-	cout << endl;
 
 	// Init necessary variables for the net
 	vector<double> result, training_input, training_output;
 	double mse = 0.0;
 	double mseBuffer = 0.0;
-	bool trained = false;
+	bool correct = true;
 
 	// logs everything into a CSV so it can be visualized later with Excel
 	ofstream myfile;
-	myfile.open("data.csv");
-	myfile << "Epoch;MSE;ERROR;Alpha: " << alpha << ";Lambda: "<< lambda << "\n";
+    myfile.open("data.csv");
+	myfile << "Epoch ;MSE ;Correct ;Alpha: " << alpha << ";Lambda: "<< lambda << "\n";
 
 	// training set
 	vector<vector<double>> data = { {1,0,0,0,0,0,0,0},
@@ -80,47 +81,45 @@ int main()
 									{0,0,0,0,0,0,0,1} };
 	int inputCounter = 0;
 
+	// ---------------------------------- MAIN  LOOP ----------------------------------	
 	for (int i = 0; i <= epochs; i++)
 	{
 		training_input = data[inputCounter];
 
-		//	feedforward
+		//	----- Feedforward -----
 		sarah.feedForward(training_input);
 
 		result = sarah.getOutput();
 
 		training_output = data[inputCounter];
 
-		// backpropagation
+		//	----- backpropagation ----- 
 		sarah.backPropagation(training_output);
 
-		for (int i = 0; i < result.size(); i++)
-		{
+		correct = true;
+		for (int i = 0; i < result.size(); i++){
 			if (interpolate(result[i]) != training_output[i])
-				trained = true;
+				correct = false;
 		}
 
 		mseBuffer += sarah.getMSE();
 
 		inputCounter++;
-			
+
+		if (i % 1000 == 0)
+			consoleLog(i, sarah);
+
+		// Log to CSV
+		if (i % 10 == 0 && i > 20)
+			myfile << i << ";" << mse << ";" << correct << "\n";
+
 		if (inputCounter == data.size())
 		{
 			mse = mseBuffer / data.size();
-			trained = false;
 			mseBuffer = 0;
 			inputCounter = 0;
 		}
-
-		if (i % 1000 == 0)
-			output(i, sarah);
-
-		// Log to CSV
-		if (i % 100 == 0 && i != 0)
-			myfile << i << ";" << mse << ";" << trained << "\n";
 	}
-
-	//outputFinal(sarah);
 
 	myfile.close();
 
@@ -129,17 +128,17 @@ int main()
 	cin >> test;
 }
 
-void output(int epoch, NeuralNet network) {
+void consoleLog(int epoch, NeuralNet network) {
 	cout << "Iteration: " << epoch << endl;
 
 	vector<vector<double>> data = { {1,0,0,0,0,0,0,0},
-							{0,1,0,0,0,0,0,0},
-							{0,0,1,0,0,0,0,0},
-							{0,0,0,1,0,0,0,0},
-							{0,0,0,0,1,0,0,0},
-							{0,0,0,0,0,1,0,0},
-							{0,0,0,0,0,0,1,0},
-							{0,0,0,0,0,0,0,1} };
+									{0,1,0,0,0,0,0,0},
+									{0,0,1,0,0,0,0,0},
+									{0,0,0,1,0,0,0,0},
+									{0,0,0,0,1,0,0,0},
+									{0,0,0,0,0,1,0,0},
+									{0,0,0,0,0,0,1,0},
+									{0,0,0,0,0,0,0,1} };
 
 	cout << "Output: \n";
 	for (int j = 0; j <= data.size() - 1; j++)
@@ -168,26 +167,6 @@ void output(int epoch, NeuralNet network) {
 	}
 	double error = network.getMSE();
 	cout << "MSE: " << error << "\n";
-}
-
-void outputFinal(NeuralNet network) {
-	cout << "Weight matrix input to hidden: \n";
-	for (int i = 0; i < network.network[0].size() - 1; i++) {
-		cout << "Layer: " << i << ' ';
-		for (int j = 0; j < network.network[0][i].weight.size(); j++) {
-			cout << fixed << setprecision(2) << network.network[0][i].weight[j] << ' ';
-		}
-		cout << '\n';
-	}
-
-	cout << "Weight matrix hidden to output: \n";
-	for (int i = 0; i < network.network[1].size() - 1; i++) {
-		cout << "Layer: " << i << ' ';
-		for (int j = 0; j < network.network[1][i].weight.size(); j++) {
-			cout << fixed << setprecision(2) << network.network[1][i].weight[j] << ' ';
-		}
-		cout << '\n';
-	}
 }
 
 int interpolate(double x)
