@@ -40,33 +40,6 @@ int main()
 	double inputlambda, inputalpha;
 	unsigned inputepochs;
 	char inputinterpolated;
-	cout << "Select an lambda value (default 0.0001): ";
-	cin >> inputlambda;
-	if (((double)inputlambda < 2) && ((double)inputlambda > 0)) {
-		lambda = inputlambda;
-		cout << "Lambda set to " << lambda << "\n";
-	}
-	else {
-		cout << "Inavlid input, lambda set to " << lambda << "\n";
-	}
-	cout << "Select an alpha value (default 0.95): ";
-	cin >> inputalpha;
-	if (((double)inputalpha < 10) && ((double)inputalpha > 0)) {
-		alpha = inputalpha;
-		cout << "Alpha set to " << alpha << "\n";
-	}
-	else {
-		cout << "Inavlid input, alpha set to " << alpha << "\n";
-	}
-	cout << "Select the number of iterations (default 20000): ";
-	cin >> inputepochs;
-	if (((unsigned)inputepochs < 1000000) && ((unsigned)inputepochs > 100)) {
-		epochs = inputepochs;
-		cout << "Epochs set to " << epochs << "\n";
-	}
-	else {
-		cout << "Inavlid input, epochs set to " << epochs << "\n";
-	}
 	cout << "Show interpolated results (1=true, 0=false default:1): ";
 	cin >> inputinterpolated;
 
