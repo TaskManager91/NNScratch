@@ -1,3 +1,10 @@
+//	#####################################################################
+//	#																	#
+//	#	Neuron.cpp														#
+//	#	contains logic for each neuron									#
+//	#																	#
+//	#####################################################################
+
 #include "Neuron.h"
 
 Neuron::Neuron(int weightCount, int myIndex)
