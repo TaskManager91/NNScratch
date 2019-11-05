@@ -1,5 +1,13 @@
-#include "NeuralNet.h"
+//	#####################################################################
+//	#																	#
+//	#	NeuralNet.cpp													#
+//	#	contains logic for the whole neural network						#
+//	#	creates/uses Neurons											#
+//	#																	#
+//	#####################################################################
 
+
+#include "NeuralNet.h"
 
 NeuralNet::NeuralNet(vector<int> structure, double aBuffer, double lBuffer)
 {

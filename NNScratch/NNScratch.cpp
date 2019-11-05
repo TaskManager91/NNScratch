@@ -1,5 +1,15 @@
-// NNScratch.cpp : Diese Datei enthält die Funktion "main". Hier beginnt und endet die Ausführung des Programms.
-//
+//	#####################################################################
+//	#																	#
+//	#	NNScratch														#
+//	#	by Christoph Bensch & Oliver Bensch								#
+//	#																	#
+//	#																	#
+//	#	Building a neural network from scratch							#
+//	#																	#
+//	#																	#
+//	#	MAIN (NNScratch.cpp)											#
+//	#																	#
+//	#####################################################################
 
 #include <iostream>
 #include <fstream>
@@ -17,8 +27,10 @@ double alpha = 0.95;		// alpha
 unsigned epochs = 20000;	// number of iterations
 bool interpolated = false;
 
+// structure of the Neural Net 8 Input Neurons 3 hidden Neurons 8 Ouput Neurons
 vector<int> structure = { 8,3,8 };
 
+//	------------------------------------ MAIN ------------------------------------
 int main()
 {
 	locale::global(locale("de-DE"));
@@ -168,7 +180,7 @@ void output(int epoch, NeuralNet network) {
 		cout << " Hidden Layer: ";
 		for (int i = 0; i < network.network[1].size()-1; i++) {
 			if(interpolated)
-				cout << interpolate(network.network[1][i].a) << ' ';
+				cout << network.network[1][i].a << ' ';
 			else
 				cout << fixed << setprecision(3) << network.network[1][i].a << ' ';
 		}
